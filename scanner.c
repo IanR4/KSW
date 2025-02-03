@@ -215,10 +215,9 @@ token prox_token(void)
 
 void match(token tok_esperado)
 {
-	// token t1 = prox_token();
-	// printf("TT: %s, TTT: %s\n", token_name(t1), token_name(tok_esperado)); // BORRAR
-	if (tok_esperado != prox_token()){
-		error_sintactico(prox_token());
+	token token = prox_token();
+	if (token != tok_esperado){
+		error_sintactico(token);
 	}
 	seguirScanneando = 1;
 }

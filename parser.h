@@ -4,7 +4,7 @@
 
 void parser();
 void programa();
-void sentencias();
+void lista_sentencias();
 void lista_ids();
 
 typedef struct {
@@ -18,4 +18,5 @@ int contiene_string(StringList *lista,char *str);
 void liberar_lista(StringList *lista);
 void lista_expresiones(StringList *lista);
 void expresion(StringList *lista);
+void sentencia();
 #endif // PARSER_H_INCLUDED

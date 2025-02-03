@@ -10,49 +10,64 @@ void programa(){
     match(INICIO);
     match(ID);
     printf("Programa: %s\n",texto);
-    sentencias();
-    match(FDT); // Deberia ser match(FIN) pero no funciona 
+    lista_sentencias();
+    match(FIN);
     printf("Fin\n");
 }
 
-void sentencias(){
-    StringList *lista_ids_declarados = crear_lista();
-    while (token_actual != FDT){
-        token tok = prox_token();
-        match(tok);
-        switch (tok) {
-            case ID: // Caso asignacion
-                match (ASIGNACION);
-                printf("Sentencia Asignacion\n");
-                lista_expresiones(lista_ids_declarados);
-                match(PUNTOYCOMA);
-            break;
+void lista_sentencias(){
+    sentencia();
+	while (1) {
+		switch (prox_token()) {
+            case ID:
             case LEER:
-                printf("Sentencia Leer\n");
-                match(PARENIZQUIERDO);
-                lista_ids(lista_ids_declarados);
-                match(PARENDERECHO);
-                match(PUNTOYCOMA);
-            break;
             case ESCRIBIR:
-                printf("Sentencia Escribir\n");
-                match(PARENIZQUIERDO);
-                lista_expresiones(lista_ids_declarados);
-                match(PARENDERECHO);
-                match(PUNTOYCOMA);
-            break;
             case DECLARACION:
-                printf("Sentencia Declaracion\n");
-                match(ID);
-                agregar_string(lista_ids_declarados,texto);
-                match(PUNTOYCOMA);
-            break;
+                sentencia();
+                break;
             default:
-                if(tok != FDT) {
-                    error_sintactico(tok);
-                }
-            break;
+                return;
         }
+	}
+}
+
+void sentencia() {
+    StringList *lista_ids_declarados = crear_lista();
+    token tok = prox_token();
+    switch (tok) {
+        case ID: // Caso asignacion
+            match(ID);
+            match(ASIGNACION);
+            printf("Sentencia Asignacion\n");
+            expresion(lista_ids_declarados);
+            match(PUNTOYCOMA);
+            break;
+        case LEER:
+            printf("Sentencia Leer\n");
+            match(LEER);
+            match(PARENIZQUIERDO);
+            lista_ids(lista_ids_declarados);
+            match(PARENDERECHO);
+            match(PUNTOYCOMA);
+            break;
+        case ESCRIBIR:
+            match(ESCRIBIR);
+            printf("Sentencia Escribir\n");
+            match(PARENIZQUIERDO);
+            lista_expresiones(lista_ids_declarados);
+            match(PARENDERECHO);
+            match(PUNTOYCOMA);
+            break;
+        case DECLARACION:
+            match(DECLARACION);
+            printf("Sentencia Declaracion\n");
+            match(ID);
+            agregar_string(lista_ids_declarados,texto);
+            match(PUNTOYCOMA);
+            break;
+        default:
+            error_sintactico(tok);
+            break;
     }
 }
 
